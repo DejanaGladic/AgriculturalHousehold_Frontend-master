@@ -1,0 +1,75 @@
+<mat-toolbar color="primary">
+    <span class="title-center">Pregled kategorija svinja i njihova pripadnost</span>
+</mat-toolbar>
+
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+    <ng-container matColumnDef="naziv_kategorije">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Naziv kategorije </th>
+        <td mat-cell *matCellDef="let element"> {{element['naziv_kategorije']}} </td>
+    </ng-container>
+    <ng-container matColumnDef="pol_svinje">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Pol svinje </th>
+        <td mat-cell *matCellDef="let element"> {{element['pol_svinje']}} </td>
+    </ng-container>
+    <ng-container matColumnDef="uzrast">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Uzrast svinje </th>
+        <td mat-cell *matCellDef="let element"> {{element['uzrast']}} </td>
+    </ng-container>
+    <ng-container matColumnDef="rasno_poreklo">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Rasno poreklo </th>
+        <td mat-cell *matCellDef="let element"> {{element['rasno_poreklo']}} </td>
+    </ng-container>
+    <ng-container matColumnDef="masa_trupa">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Masa trupa </th>
+        <td mat-cell *matCellDef="let element"> {{element['masa_trupa']}} </td>
+    </ng-container>
+   <ng-container matColumnDef="trup">
+        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Trup </th>
+        <td mat-cell *matCellDef="let element">
+            <ul>
+                <li *ngFor="let deoTrupa of element['trup']">{{deoTrupa}}</li>
+            </ul>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="expand">
+        <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button aria-label="expand row"
+                (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation(); loadSvinjePoKategoriji(element.naziv_kategorije)">
+                <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'" >
+                <div class="example-element-diagram">
+                    <table class="mat-elevation-z8 demo-table">
+                        <tr>
+                            <th>Tetovir broj</th>
+                            <th>Oznaka legla</th>
+                            <th>Rasa svinje</th>
+                            <th>Aktuelni veterinarski broj svinje</th>
+                        </tr>
+                        <tr *ngFor="let svinja of svinjePoKategoriji">
+                            <td>{{svinja.tetovir_broj_svinje}}</td>
+                            <td> {{svinja.oznaka_legla}}</td>
+                            <td>{{svinja.rasa}}</td>
+                            <td>{{svinja.aktuelni_veterinarski_broj}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>
